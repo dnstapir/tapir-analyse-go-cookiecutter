@@ -78,6 +78,7 @@ func main() {
 	}
 
 	sigChan := make(chan os.Signal, 1)
+    defer close(sigChan)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
 	done := application.Run()

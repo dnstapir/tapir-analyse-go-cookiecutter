@@ -6,31 +6,26 @@ import (
 	"os"
 )
 
-type Config struct {
-	Level int
-}
-
 type logger struct {
 	logger *slog.Logger
 }
 
-func Create(conf Config) (*logger, error) {
+func Create(debug, quiet bool) logger {
 	var programLevel = new(slog.LevelVar) // Info by default
-    level := conf.Level
 
-	if level >= 4 {
+    /* quiet overrides debug */
+	if debug {
 		programLevel.Set(slog.LevelDebug)
-	} else if level == 3 {
-		programLevel.Set(slog.LevelInfo)
-	} else if level == 2 {
-		programLevel.Set(slog.LevelWarn)
 	}
+    if quiet {
+        programLevel.Set(slog.LevelWarn)
+    }
 
 	h := slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: programLevel})
 
 	l := slog.New(h)
 
-	return &logger{logger: l}, nil
+	return logger{logger: l}
 }
 
 func (l logger) Debug(fmtStr string, vals ...any) {
