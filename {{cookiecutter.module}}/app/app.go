@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+    "fmt"
     "github.com/dnstapir/{{cookiecutter.module}}/app/ext"
 )
 
@@ -72,4 +73,8 @@ func (a *App) Stop() error {
 
 func (a *App) handleMsg(msg string) {
     a.Log.Info("Received message '%s'", msg)
+    err := a.Nats.Publish(fmt.Sprintf("Returning: %s", msg))
+    if err != nil {
+        a.Log.Error("Error publishing nats message!")
+    }
 }

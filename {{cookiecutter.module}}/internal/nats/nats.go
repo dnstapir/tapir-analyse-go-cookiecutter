@@ -6,12 +6,13 @@ import (
 
 type Client struct {
     url string
-    subject string
+    inSubject string
+    outSubject string
     queue string
 }
 
-func CreateClient(url, subject, queue string) (Client, error) {
-    return Client{url, subject, queue}, nil
+func CreateClient(url, inSubject, outSubject, queue string) (Client, error) {
+    return Client{url, inSubject, outSubject, queue}, nil
 }
 
 func (c Client) ActivateSubscription() (<-chan string, error) {
@@ -21,7 +22,7 @@ func (c Client) ActivateSubscription() (<-chan string, error) {
 	}
 
 	rawCh := make(chan *nats.Msg)
-	_, err = nc.ChanQueueSubscribe(c.subject, c.queue, rawCh)
+	_, err = nc.ChanQueueSubscribe(c.inSubject, c.queue, rawCh)
 	if err != nil {
         return nil, err
 	}
@@ -39,5 +40,18 @@ func (c Client) ActivateSubscription() (<-chan string, error) {
 }
 
 func (c Client) Publish(msg string) error {
+	nc, err := nats.Connect(c.url)
+	if err != nil {
+		return err
+	}
+
+	natsMsg := nats.NewMsg(c.outSubject)
+	natsMsg.Data = []byte(msg)
+
+	err = nc.PublishMsg(natsMsg)
+	if err != nil {
+        return err
+	}
+
     return nil
 }

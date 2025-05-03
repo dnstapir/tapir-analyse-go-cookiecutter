@@ -7,21 +7,22 @@ import (
 )
 
 type AppConf struct {
-	Debug bool       `json:"debug"`
-	Quiet bool       `json:"quiet"`
-    Nats  NatsConfig `json:"nats"`
+	Debug bool        `json:"debug"`
+	Quiet bool        `json:"quiet"`
+    Nats  NatsConfig  `json:"nats"`
 }
 
 type NatsConfig struct {
-	Url     string   `json:"url"`
-	Subject string   `json:"subject"`
-	Queue   string   `json:"queue"`
+	Url     string    `json:"url"`
+	InSubject string  `json:"in_subject"`
+	OutSubject string `json:"out_subject"`
+	Queue   string    `json:"queue"`
 }
 
 func BuildApp(conf AppConf) (*app.App, error) {
     log := logging.Create(conf.Debug, conf.Quiet)
 
-    natsClient, err := nats.CreateClient(conf.Nats.Url, conf.Nats.Subject, conf.Nats.Queue)
+    natsClient, err := nats.CreateClient(conf.Nats.Url, conf.Nats.InSubject, conf.Nats.OutSubject, conf.Nats.Queue)
     if err != nil {
         return nil, err
     }
