@@ -1,0 +1,9 @@
+{
+    "__revision":         0,
+    "user":               "dnstapir",
+    "email":              "dev@dnstapir.se",
+    "component":          "dummy",
+    "description":        "Dummy description",
+    "module":             "tapir-analyse-{{cookiecutter.component}}",
+    "module_path":        "github.com/dnstapir/{{cookiecutter.module}}"
+}
