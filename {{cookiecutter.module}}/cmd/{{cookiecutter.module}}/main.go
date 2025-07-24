@@ -29,7 +29,7 @@ func main() {
 	)
 	flag.StringVar(&configFile,
 		"config-file",
-		"/etc/dnstapir/{{cookiecutter.module}}.json",
+		"/etc/dnstapir/{{cookiecutter.module}}.toml",
 		"Configuration file to use",
 	)
 	flag.BoolVar(&debugFlag,
