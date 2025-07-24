@@ -55,14 +55,18 @@ func main() {
 		os.Exit(-1)
 	}
 
-	confDecoder := json.NewDecoder(file)
+	confDecoder := toml.NewDecoder(file)
 	if confDecoder == nil {
 		fmt.Printf("Problem decoding config file '%s', exiting...\n", configFile)
 		os.Exit(-1)
 	}
 
 	confDecoder.DisallowUnknownFields()
-	confDecoder.Decode(&mainConf)
+	err = confDecoder.Decode(&mainConf)
+	if err != nil {
+		fmt.Printf("Problem decoding config file '%s', exiting...\n", configFile)
+		os.Exit(-1)
+	}
 
 	/* If set, CLI flags override config file */
 	if debugFlag {

@@ -7,16 +7,16 @@ import (
 )
 
 type AppConf struct {
-	Debug bool        `json:"debug"`
-	Quiet bool        `json:"quiet"`
-    Nats  NatsConfig  `json:"nats"`
+	Debug bool       `toml:"debug"`
+	Quiet bool       `toml:"quiet"`
+	Nats  NatsConfig `toml:"nats"`
 }
 
 type NatsConfig struct {
-	Url     string    `json:"url"`
-	InSubject string  `json:"in_subject"`
-	OutSubject string `json:"out_subject"`
-	Queue   string    `json:"queue"`
+	Url        string `toml:"url"`
+	InSubject  string `toml:"in_subject"`
+	OutSubject string `toml:"out_subject"`
+	Queue      string `toml:"queue"`
 }
 
 func BuildApp(conf AppConf) (*app.App, error) {
