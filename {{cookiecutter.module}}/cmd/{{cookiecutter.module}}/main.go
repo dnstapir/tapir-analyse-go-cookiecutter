@@ -9,6 +9,7 @@ import (
 	"syscall"
 
     "github.com/dnstapir/{{cookiecutter.module}}/setup"
+	"github.com/pelletier/go-toml/v2"
 )
 
 /* Rewritten if building with make */
