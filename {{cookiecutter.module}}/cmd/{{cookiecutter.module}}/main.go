@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -9,6 +8,7 @@ import (
 	"syscall"
 
     "github.com/dnstapir/{{cookiecutter.module}}/setup"
+	"github.com/pelletier/go-toml/v2"
 )
 
 /* Rewritten if building with make */
@@ -28,7 +28,7 @@ func main() {
 	)
 	flag.StringVar(&configFile,
 		"config-file",
-		"/etc/dnstapir/{{cookiecutter.module}}.json",
+		"/etc/dnstapir/{{cookiecutter.module}}.toml",
 		"Configuration file to use",
 	)
 	flag.BoolVar(&debugFlag,
@@ -54,14 +54,18 @@ func main() {
 		os.Exit(-1)
 	}
 
-	confDecoder := json.NewDecoder(file)
+	confDecoder := toml.NewDecoder(file)
 	if confDecoder == nil {
 		fmt.Printf("Problem decoding config file '%s', exiting...\n", configFile)
 		os.Exit(-1)
 	}
 
 	confDecoder.DisallowUnknownFields()
-	confDecoder.Decode(&mainConf)
+	err = confDecoder.Decode(&mainConf)
+	if err != nil {
+		fmt.Printf("Problem decoding config file '%s', exiting...\n", configFile)
+		os.Exit(-1)
+	}
 
 	/* If set, CLI flags override config file */
 	if debugFlag {
