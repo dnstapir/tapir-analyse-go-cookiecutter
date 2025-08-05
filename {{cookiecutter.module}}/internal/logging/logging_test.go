@@ -19,9 +19,9 @@ func TestLoggingCreateNoError(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-            conf := Config{
-                Level: tt.indata,
-            }
+			conf := Config{
+				Level: tt.indata,
+			}
 			_, got := Create(conf)
 			if got != tt.expected {
 				t.Fatalf("got %q, expected %q", got, tt.expected)
@@ -67,9 +67,9 @@ func TestLoggingDebugNoPanic(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-            conf := Config{
-                Level: tt.indata,
-            }
+			conf := Config{
+				Level: tt.indata,
+			}
 			l, _ := Create(conf)
 			l.Debug("nothing")
 		})
@@ -91,9 +91,9 @@ func TestLoggingInfoNoPanic(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-            conf := Config{
-                Level: tt.indata,
-            }
+			conf := Config{
+				Level: tt.indata,
+			}
 			l, _ := Create(conf)
 			l.Info("nothing")
 		})
@@ -115,9 +115,9 @@ func TestLoggingWarningNoPanic(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-            conf := Config{
-                Level: tt.indata,
-            }
+			conf := Config{
+				Level: tt.indata,
+			}
 			l, _ := Create(conf)
 			l.Warning("nothing")
 		})
@@ -139,9 +139,9 @@ func TestLoggingErrorNoPanic(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-            conf := Config{
-                Level: tt.indata,
-            }
+			conf := Config{
+				Level: tt.indata,
+			}
 			l, _ := Create(conf)
 			l.Error("nothing")
 		})

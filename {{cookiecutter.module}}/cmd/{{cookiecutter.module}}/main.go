@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-    "github.com/dnstapir/{{cookiecutter.module}}/setup"
+	"github.com/dnstapir/{{cookiecutter.module}}/setup"
 	"github.com/pelletier/go-toml/v2"
 )
 
@@ -82,7 +82,7 @@ func main() {
 	}
 
 	sigChan := make(chan os.Signal, 1)
-    defer close(sigChan)
+	defer close(sigChan)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
 	done := application.Run()

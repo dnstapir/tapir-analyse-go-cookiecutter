@@ -5,14 +5,14 @@ import (
 )
 
 type Client struct {
-    url string
-    inSubject string
-    outSubject string
-    queue string
+	url        string
+	inSubject  string
+	outSubject string
+	queue      string
 }
 
 func CreateClient(url, inSubject, outSubject, queue string) (Client, error) {
-    return Client{url, inSubject, outSubject, queue}, nil
+	return Client{url, inSubject, outSubject, queue}, nil
 }
 
 func (c Client) ActivateSubscription() (<-chan string, error) {
@@ -24,17 +24,17 @@ func (c Client) ActivateSubscription() (<-chan string, error) {
 	rawCh := make(chan *nats.Msg)
 	_, err = nc.ChanQueueSubscribe(c.inSubject, c.queue, rawCh)
 	if err != nil {
-        return nil, err
+		return nil, err
 	}
 
 	strCh := make(chan string)
-    go func() {
-        for msg := range rawCh {
-            strCh <- string(msg.Data)
-            msg.Ack()
-        }
-        close(strCh)
-    }()
+	go func() {
+		for msg := range rawCh {
+			strCh <- string(msg.Data)
+			msg.Ack()
+		}
+		close(strCh)
+	}()
 
 	return strCh, nil
 }
@@ -50,8 +50,8 @@ func (c Client) Publish(msg string) error {
 
 	err = nc.PublishMsg(natsMsg)
 	if err != nil {
-        return err
+		return err
 	}
 
-    return nil
+	return nil
 }
