@@ -75,6 +75,12 @@ func main() {
 		mainConf.Quiet = true
 	}
 
+	/* If set, environment variables override config file */
+	url, exists := os.LookupEnv("TAPIR_ANALYSE_NATS_URL")
+	if exists {
+		mainConf.Nats.Url = url
+	}
+
 	application, err := setup.BuildApp(mainConf)
 	if err != nil {
 		fmt.Printf("Error building application: '%s', exiting...\n", err)
