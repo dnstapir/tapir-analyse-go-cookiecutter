@@ -23,11 +23,13 @@ jobs:
 
     - name: Create context file
       run: |
-        echo '{ "module": "go-project" }' > cc-context.json
+        echo 'default_context:
+          module: go-project
+        ' > cc-context.yaml
 
     - name: Build project
       run: |
-        cookiecutter . --no-input --config-file cc-context.json
+        cookiecutter . --no-input --config-file cc-context.yaml
       
     - name: Debug
       run: |
