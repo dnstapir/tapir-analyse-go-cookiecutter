@@ -24,7 +24,7 @@ jobs:
     - name: Create context file
       run: |
         echo 'default_context:
-          module: go-project
+          module: gha-test
         ' > cc-context.yaml
 
     - name: Build project
@@ -40,6 +40,6 @@ jobs:
     - name: Generate artifact
       uses: actions/upload-artifact@v4.6.2
       with:
-        name: go-project
-        path: ./go-project
+        name: gha-test
+        path: ./gha-test
         retention-days: 1
