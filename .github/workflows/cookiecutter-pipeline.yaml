@@ -16,6 +16,7 @@ jobs:
     - name: Cookiecutter build
       uses: andrewthetechie/gha-cookiecutter@v1.3.2
       with:
+        template: .
         cookiecutterValues: '{"module": go-project}'
       
     - name: Generate artifact
