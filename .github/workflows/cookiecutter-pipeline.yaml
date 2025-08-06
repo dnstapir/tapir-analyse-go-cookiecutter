@@ -6,3 +6,21 @@ on:
   pull_request:
     branches: [ "main" ]
 
+jobs:
+  cookiecutter:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Cookiecutter build
+      uses: andrewthetechie/gha-cookiecutter@v1.3.2
+      with:
+        cookiecutterValues: '{"module": go-project}'
+      
+    - name: Generate artifact
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: go-project
+        path: ./go-project
+        retention-days: 1
