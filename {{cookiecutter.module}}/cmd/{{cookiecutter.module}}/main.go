@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/url"
 	"os"
 	"os/signal"
 	"syscall"
@@ -73,6 +74,17 @@ func main() {
 	}
 	if quietFlag {
 		mainConf.Quiet = true
+	}
+
+	/* If set, environment variables override config file */
+	natsURL, exists := os.LookupEnv("TAPIR_ANALYSE_NATS_URL")
+	if exists && natsURL != "" {
+		parsedURL, err := url.Parse(natsURL)
+		if err != nil {
+			fmt.Printf("Invalid NATS URL format from environment variable '%s': %s, exiting...\n", natsURL, err)
+			os.Exit(-1)
+		}
+		mainConf.Nats.Url = parsedURL.String()
 	}
 
 	application, err := setup.BuildApp(mainConf)
