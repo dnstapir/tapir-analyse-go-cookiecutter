@@ -55,12 +55,12 @@ jobs:
         
     - name: Check formatting
       run: |
-        gofmt -l ./gha-test | while IFS= read -r file; do
-          echo "::warning file=$file::File is not gofmt formatted"
-          has_errors=true
-        done
+        files=$(gofmt -l ./gha-test)
 
-        if [ "$has_errors" = true ]; then
+        if [ -n "$files" ]; then
+          while IFS= read -r file; do
+            echo "::warning file=$file::File is not gofmt formatted"
+          done <<< "$files"
           exit 1
         else
           echo "✅ All files are properly formatted."
