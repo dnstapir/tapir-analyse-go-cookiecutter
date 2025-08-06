@@ -17,7 +17,7 @@ jobs:
       uses: andrewthetechie/gha-cookiecutter@v1.3.2
       with:
         template: .
-        cookiecutterValues: '{"module": go-project}'
+        cookiecutterValues: '{"module": "go-project"}'
       
     - name: Generate artifact
       uses: actions/upload-artifact@v4.6.2
