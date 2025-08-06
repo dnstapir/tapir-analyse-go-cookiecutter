@@ -52,7 +52,6 @@ jobs:
       uses: actions/setup-go@v5.5.0
       with:
         go-version: 'stable'
-        cache: true
         
     - name: Check formatting
       run: |
