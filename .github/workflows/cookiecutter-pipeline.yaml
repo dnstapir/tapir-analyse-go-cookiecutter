@@ -13,16 +13,21 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     
-    - name: debug
-      run: |
-        ls -la
-        pwd
-    
-    - name: Cookiecutter build
-      uses: andrewthetechie/gha-cookiecutter@v1.3.2
+    - name: Set up Python
+      uses: actions/setup-python@v5
       with:
-        template: .
-        cookiecutterValues: '{"module": "go-project"}'
+        python-version: '3.x'
+
+    - name: Install Cookiecutter
+      run: pip install cookiecutter
+
+    - name: Create context file
+      run: |
+        echo '{ "module": "go-project" }' > cc-context.json
+
+    - name: Build project
+      run: |
+        cookiecutter . --no-input --config-file cc-context.json
       
     - name: Generate artifact
       uses: actions/upload-artifact@v4.6.2
