@@ -13,7 +13,7 @@ func TestLoggingDebugNoPanic(t *testing.T) {
 		{"true-true", true, true},
 		{"true-false", true, false},
 		{"false-true", false, true},
-		{"true-true", false, false},
+		{"false-false", false, false},
 	}
 
 	for _, tt := range tests {
@@ -33,7 +33,7 @@ func TestLoggingInfoNoPanic(t *testing.T) {
 		{"true-true", true, true},
 		{"true-false", true, false},
 		{"false-true", false, true},
-		{"true-true", false, false},
+		{"false-false", false, false},
 	}
 
 	for _, tt := range tests {
@@ -53,7 +53,7 @@ func TestLoggingWarningNoPanic(t *testing.T) {
 		{"true-true", true, true},
 		{"true-false", true, false},
 		{"false-true", false, true},
-		{"true-true", false, false},
+		{"false-false", false, false},
 	}
 
 	for _, tt := range tests {
@@ -73,7 +73,7 @@ func TestLoggingErrorNoPanic(t *testing.T) {
 		{"true-true", true, true},
 		{"true-false", true, false},
 		{"false-true", false, true},
-		{"true-true", false, false},
+		{"false-false", false, false},
 	}
 
 	for _, tt := range tests {
