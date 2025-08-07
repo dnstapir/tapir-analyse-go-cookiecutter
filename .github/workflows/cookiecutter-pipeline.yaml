@@ -1,0 +1,94 @@
+name: Cookiecutter Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  cookiecutter:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install Cookiecutter
+      run: pip install cookiecutter
+
+    - name: Create context file
+      run: |
+        echo 'default_context:
+          module: gha-test
+        ' > cc-context.yaml
+
+    - name: Build project
+      run: |
+        cookiecutter . --no-input --config-file cc-context.yaml
+      
+    - name: Generate artifact
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: gha-test
+        path: ./gha-test
+        retention-days: 1
+
+  format:
+    runs-on: ubuntu-latest
+    needs: cookiecutter
+    steps:
+    - name: Get Go project
+      uses: actions/download-artifact@v4
+      with:
+        name: gha-test
+        path: ./gha-test
+
+    - name: Setup Go
+      uses: actions/setup-go@v5.5.0
+      with:
+        go-version: 'stable'
+        
+    - name: Check formatting
+      run: |
+        files=$(gofmt -l ./gha-test)
+
+        if [ -n "$files" ]; then
+          while IFS= read -r file; do
+            echo "::warning file=$file::File is not gofmt formatted"
+          done <<< "$files"
+          exit 1
+        else
+          echo "✅ All files are properly formatted."
+        fi
+    
+  test:
+    runs-on: ubuntu-latest
+    needs: cookiecutter
+    steps:
+    - name: Get Go project
+      uses: actions/download-artifact@v4
+      with:
+        name: gha-test
+        path: ./gha-test
+
+    - name: Setup Go
+      uses: actions/setup-go@v5.5.0
+      with:
+        go-version: 'stable'
+        cache: true
+
+    - name: Build
+      run: |
+        cd gha-test
+        go build -v ./...
+
+    - name: Test
+      run: |
+        cd gha-test
+        go test -v ./...
+    
