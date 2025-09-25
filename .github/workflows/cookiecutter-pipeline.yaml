@@ -85,7 +85,7 @@ jobs:
     - name: Build
       run: |
         cd gha-test
-        make
+        make all
 
     - name: Test
       run: |
