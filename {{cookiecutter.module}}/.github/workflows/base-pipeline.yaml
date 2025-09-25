@@ -30,3 +30,23 @@ jobs:
         else
           echo "✅ All files are properly formatted."
         fi
+  
+  test:
+    runs-on: ubuntu-latest
+    needs: format
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Go
+      uses: actions/setup-go@v5.5.0
+      with:
+        go-version: 'stable'
+
+    - name: Build
+      run: |
+        make build
+
+    - name: Test
+      run: |
+        make test
