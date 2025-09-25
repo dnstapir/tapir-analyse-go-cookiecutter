@@ -85,10 +85,10 @@ jobs:
     - name: Build
       run: |
         cd gha-test
-        go build -v ./...
+        make
 
     - name: Test
       run: |
         cd gha-test
-        go test -v ./...
+        make test
     
