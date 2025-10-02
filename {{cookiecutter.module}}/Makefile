@@ -3,7 +3,7 @@ COMMIT:=`git describe --dirty=+WiP --always 2> /dev/null || echo "no-vcs"`
 
 .PHONY: test coverage fmt clean
 
-all:
+build:
 	go build -v -ldflags "-X 'main.version=$(VERSION)-$(COMMIT)'" -o ./bin/ ./cmd/...
 
 test:
