@@ -6,6 +6,8 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  GO_VERSION: "{{ cookiecutter.go_version }}"
 jobs:
   format:
     runs-on: ubuntu-latest
@@ -16,7 +18,7 @@ jobs:
     - name: Setup Go
       uses: actions/setup-go@v5.5.0
       with:
-        go-version: 'stable'
+        go-version: {% raw %}${{ env.GO_VERSION }}{% endraw %}
    
     - name: Check formatting
       run: |
@@ -41,7 +43,7 @@ jobs:
     - name: Setup Go
       uses: actions/setup-go@v5.5.0
       with:
-        go-version: 'stable'
+        go-version: {% raw %}${{ env.GO_VERSION }}{% endraw %}
 
     - name: Build
       run: |

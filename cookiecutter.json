@@ -5,5 +5,6 @@
     "component":          "dummy",
     "description":        "Dummy description",
     "module":             "tapir-analyse-{{cookiecutter.component}}",
-    "module_path":        "github.com/dnstapir/{{cookiecutter.module}}"
+    "module_path":        "github.com/dnstapir/{{cookiecutter.module}}",
+    "go_version":         "stable"
 }
