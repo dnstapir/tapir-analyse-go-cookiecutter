@@ -1,6 +1,6 @@
 module github.com/dnstapir/{{cookiecutter.module}}
 
-go 1.23.6
+go {{ cookiecutter.go_version }}
 
 require github.com/nats-io/nats.go v1.39.1
 
