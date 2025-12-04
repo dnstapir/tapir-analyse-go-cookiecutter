@@ -25,6 +25,7 @@ jobs:
       run: |
         echo 'default_context:
           module: gha-test
+          go_version: 1.25.4
         ' > cc-context.yaml
 
     - name: Build project
