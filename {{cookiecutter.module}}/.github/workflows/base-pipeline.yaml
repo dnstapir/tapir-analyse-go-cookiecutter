@@ -9,31 +9,7 @@ on:
 env:
   GO_VERSION: "{{ cookiecutter.go_version }}"
 jobs:
-  format:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup Go
-      uses: actions/setup-go@v5.5.0
-      with:
-        go-version: {% raw %}${{ env.GO_VERSION }}{% endraw %}
-   
-    - name: Check formatting
-      run: |
-        files=$(gofmt -l ./)
-
-        if [ -n "$files" ]; then
-          while IFS= read -r file; do
-            echo "::warning file=$file::File is not gofmt formatted"
-          done <<< "$files"
-          exit 1
-        else
-          echo "✅ All files are properly formatted."
-        fi
-  
-  test:
+  basic:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -44,10 +20,10 @@ jobs:
       with:
         go-version: {% raw %}${{ env.GO_VERSION }}{% endraw %}
 
-    - name: Build
+    - name: Check Formatting
       run: |
-        make build
+        make checkfmt
 
-    - name: Test
+    - name: Run Tests
       run: |
         make test
