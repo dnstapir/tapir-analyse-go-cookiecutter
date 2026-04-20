@@ -72,39 +72,60 @@ func (a *apiHandle) Run(ctx context.Context, exitCh chan<- common.Exit) {
 		return
 	}
 
+	var err error
+	serveErrCh := make(chan error, 10)
+
 	srv := &http.Server{
 		Addr:         a.listenInterface,
 		ReadTimeout:  time.Minute,
 		WriteTimeout: time.Minute,
 	}
 
-	var err error
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 
-		err = srv.ListenAndServe()
-		if errors.Is(err, http.ErrServerClosed) {
-			a.log.Info("API server closing")
-			err = nil
-		} else {
-			a.log.Error("Unexpected API server shutdown: '%s'", err)
+		srvErr := srv.ListenAndServe()
+		if srvErr != nil {
+			serveErrCh <- srvErr
 		}
-
 	}()
 
-	<-ctx.Done()
-	a.log.Info("Shutting down API")
-	shutdownCtx, cancel := context.WithTimeout(context.Background(), time.Second*2)
-	defer cancel()
-	err = srv.Shutdown(shutdownCtx)
-	if err != nil {
-		a.log.Error("Bad API server shutdown: '%s'", err)
+API_LOOP:
+	for {
+		var ok bool
+		select {
+		case err, ok = <-serveErrCh:
+			if ok {
+				break API_LOOP
+			} else {
+				a.log.Error("Sever error channel closed unexpectedly")
+				err = common.ErrFatal
+			}
+			break API_LOOP
+		case <-ctx.Done():
+			a.log.Info("Shutting down API")
+			shutdownCtx, cancel := context.WithTimeout(context.Background(), time.Second*2)
+			defer cancel()
+			shutdownErr := srv.Shutdown(shutdownCtx)
+			if shutdownErr != nil {
+				a.log.Error("Bad API server shutdown: '%s'", shutdownErr)
+				serveErrCh <- shutdownErr
+			}
+		}
 	}
-	wg.Wait()
 
-	exitCh <- common.Exit{ID: a.id, Err: err}
+	a.log.Info("Waiting for API server thread to finish")
+	wg.Wait()
+	a.log.Info("API server thread finished")
+
+	if errors.Is(err, http.ErrServerClosed) || err == nil {
+		exitCh <- common.Exit{ID: a.id, Err: nil}
+	} else {
+		exitCh <- common.Exit{ID: a.id, Err: err}
+	}
+
 	a.log.Info("API server shutdown done")
 	return
 }
