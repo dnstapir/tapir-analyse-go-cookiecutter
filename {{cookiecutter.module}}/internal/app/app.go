@@ -110,7 +110,11 @@ MAIN_APP_LOOP:
 				isTick:   true,
 				tickData: t.Unix(),
 			}
-			jobChan <- j
+			select {
+			case jobChan <- j:
+			case <-ctx.Done():
+				break MAIN_APP_LOOP
+			}
 		case natsMsg, ok := <-natsChan:
 			if !ok {
 				a.log.Warning("NATS channel closed")
@@ -120,7 +124,11 @@ MAIN_APP_LOOP:
 				j := job{
 					msg: natsMsg,
 				}
-				jobChan <- j
+				select {
+				case jobChan <- j:
+				case <-ctx.Done():
+					break MAIN_APP_LOOP
+				}
 			}
 		case <-ctx.Done():
 			a.log.Info("Stopping main worker thread")
