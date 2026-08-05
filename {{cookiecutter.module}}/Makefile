@@ -2,7 +2,7 @@ VERSION:=$(shell cat ./VERSION)
 COMMIT:=$(shell git describe --dirty=+WiP --always 2> /dev/null || echo "no-vcs")
 OUT:=$(CURDIR)/out
 
-.PHONY: all build outdir test coverage fmt vet clean ko
+.PHONY: all build outdir test coverage fmt vet clean ko checkfmt
 
 all: build
 
