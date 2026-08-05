@@ -1,0 +1,32 @@
+name: Build container
+
+on:
+  workflow_run:
+    workflows:
+      - "Base Pipeline"
+    branches:
+      - "main"
+    types:
+      - completed
+  push:
+    tags:
+      - "v*.*.*"
+
+env:
+  GO_VERSION: "{{ cookiecutter.go_version }}"
+jobs:
+  container:
+    if: {% raw %}${{ github.event.workflow_run.conclusion == 'success' }}{% endraw %}
+    name: Build and push container
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: {% raw %}${{ env.GO_VERSION }}{% endraw %}
+      - uses: ko-build/setup-ko@v0.7
+      - run: ko build --bare ./cmd/{{cookiecutter.module}}
